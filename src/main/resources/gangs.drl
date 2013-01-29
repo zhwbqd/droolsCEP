@@ -1,0 +1,50 @@
+//created on: 29-Jan-2013
+package ef.droolsFusion
+
+//list any import classes here.
+import ef.droolsFusion.Workorder;
+
+
+//declare any global variables here
+declare Workorder
+	@role(event)
+	@timestamp(date.getTime())
+end
+
+
+
+rule "Fast gang"
+
+    when
+        //conditions
+        $w : Workorder ($gang : gang) from entry-point Surrey
+        Workorder( this before[1ms,1h] $w, gang == $gang) from entry-point Surrey
+        
+    then
+        //actions
+		System.out.println("Gang: " + $w.getGang() + " finishes his work quickly");
+end
+
+rule "Regular gang"
+
+    when
+        //conditions
+        $w : Workorder ($gang : gang) from entry-point Surrey
+        Workorder( this before[1h,10h] $w, gang == $gang) from entry-point Surrey
+        
+    then
+        //actions
+		System.out.println("Gang: " + $w.getGang() + " finishes his work at time");
+end
+
+rule "Lazy gang"
+
+    when
+        //conditions
+        $w : Workorder ($gang : gang) from entry-point Surrey
+        Workorder( this before[10h] $w, gang == $gang) from entry-point Surrey
+        
+    then
+        //actions
+		System.out.println("Gang: " + $w.getGang() + " works very slow");
+end
