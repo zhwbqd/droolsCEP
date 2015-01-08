@@ -8,7 +8,7 @@ import ef.droolsFusion.Workorder;
 //declare any global variables here
 declare Workorder
 	@role(event)
-	@timestamp(date.getTime())
+	@timestamp//date.getTime())
 end
 
 
