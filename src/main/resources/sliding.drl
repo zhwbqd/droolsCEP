@@ -1,0 +1,35 @@
+package ef.droolsFusion
+
+import ef.droolsFusion.Workorder;
+
+//declare any global variables here
+declare Workorder
+	@role(event)
+	@timestamp//date.getTime())
+end
+
+
+
+rule "alert ring, 30s over 500 cost"
+
+       when
+                  Number( $totalSalesAmount : intValue, intValue >= 500)
+                  from accumulate (Workorder ($hours : hours, $costPerHour : costPerHour)
+                  over window:time( 30s )
+                  from entry-point Surrey,
+                  sum($hours*$costPerHour))
+    then
+		System.out.println("WARNING! 30s over 500 cost : " + $totalSalesAmount);
+end
+
+rule "alert ring, 2times over 500 cost"
+
+       when
+                  Number( $totalSalesAmount : intValue, intValue >= 500)
+                  from accumulate (Workorder ($hours : hours, $costPerHour : costPerHour)
+                  over window:length( 2 )
+                  from entry-point Surrey,
+                  sum($hours*$costPerHour))
+    then
+		System.out.println("WARNING, 2times over 500 cost : " + $totalSalesAmount);
+end

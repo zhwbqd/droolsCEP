@@ -1,4 +1,3 @@
-//created on: 29-Jan-2013
 package ef.droolsFusion
 
 //list any import classes here.
@@ -18,7 +17,7 @@ rule "Fast gang"
     when
         //conditions
         $w : Workorder ($gang : gang) from entry-point Surrey
-        Workorder( this before[1ms,1h] $w, gang == $gang) from entry-point Surrey
+        Workorder( this before[1ms,1h] $w, gang == $gang) from entry-point Surrey //  1ms < $w.startTs - this.endTs< 1h
         
     then
         //actions
@@ -30,7 +29,7 @@ rule "Regular gang"
     when
         //conditions
         $w : Workorder ($gang : gang) from entry-point Surrey
-        Workorder( this before[1h,10h] $w, gang == $gang) from entry-point Surrey
+        Workorder( this before[1h,10h] $w, gang == $gang) from entry-point Surrey  //  1h < $w.startTs - this.endTs< 10h
         
     then
         //actions
@@ -42,7 +41,7 @@ rule "Lazy gang"
     when
         //conditions
         $w : Workorder ($gang : gang) from entry-point Surrey
-        Workorder( this before[10h] $w, gang == $gang) from entry-point Surrey
+        Workorder( this before[10h] $w, gang == $gang) from entry-point Surrey  //   $w.startTs - this.endTs> 10h
         
     then
         //actions

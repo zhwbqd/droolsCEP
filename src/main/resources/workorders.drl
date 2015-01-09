@@ -1,4 +1,3 @@
-//created on: 29-Jan-2013
 package ef.droolsFusion
 
 //list any import classes here.
@@ -18,20 +17,9 @@ rule "Surrey money"
         //conditions
         Number( $totalSalesAmount : intValue, intValue > 1000)
         from accumulate (Workorder ($hours : hours, $costPerHour : costPerHour)
-        from entry-point Surrey,sum($hours*$costPerHour))
+        from entry-point Surrey,
+        sum($hours*$costPerHour))
     then
         //actions
-		System.out.println("Surrey - has passed its amount of money allowed");
-end
-
-rule "Sussex money"
-    //include attributes such as "salience" here...
-   when
-        //conditions
-        Number( $totalSalesAmount : intValue, intValue > 1000)
-        from accumulate (Workorder ($hours : hours, $costPerHour : costPerHour)
-        from entry-point Sussex,sum($hours*$costPerHour))
-    then
-        //actions
-		System.out.println("Sussex - has passed its amount of money allowed");
+		System.out.println("Surrey - has passed its amount of money allowed, money is :"+$totalSalesAmount);
 end
