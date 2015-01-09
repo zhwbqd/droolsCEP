@@ -2,7 +2,10 @@ package zhwb.droolsFusion;
 
 import java.util.Date;
 
-
+/**
+ * @author jack.zhang
+ * @since 2015/1/8
+ */
 public class Workorder {
     private String address;
     private long hours;

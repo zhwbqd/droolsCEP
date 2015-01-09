@@ -1,6 +1,6 @@
 package ef.droolsFusion
 
-import ef.droolsFusion.Workorder;
+import zhwb.droolsFusion.Workorder;
 
 //declare any global variables here
 declare Workorder

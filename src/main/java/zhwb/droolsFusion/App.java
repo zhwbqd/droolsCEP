@@ -17,6 +17,10 @@ import org.drools.time.SessionPseudoClock;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author jack.zhang
+ * @since 2015/1/8
+ */
 public class App {
     public static void main(String[] args) {
         App app = new App();
@@ -24,7 +28,6 @@ public class App {
     }
 
     public void run() {
-        // KnowledgeBuilder: Has a collection of DRL files, so our rules set can be divided in several files
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
         URL urlWorkorders = App.class.getClassLoader().getResource("workorders.drl");
@@ -37,25 +40,22 @@ public class App {
             System.err.println(kbuilder.getErrors().toString());
         }
 
-        // KnowledgeBaseConfiguration : We'll use this class to set the Event Processing Mode as STREAM
+        // EVENT需要设置config = STREAM
         KnowledgeBaseConfiguration config = KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
         config.setOption(EventProcessingOption.STREAM);
 
-
-        // KnowledgeBase: We create our KnowledgeBase considering the Collection of DRL files the KnowledgeBuider has
         KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase(config);
         kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
 
 
         KnowledgeSessionConfiguration configSession = KnowledgeBaseFactory.newKnowledgeSessionConfiguration();
-        // a clock that is controlled by the application
-        // that is called Pseudo Clock. This clock is specially useful for unit testing temporal rules since it
-        // can be controlled by the application and so the results become deterministic.
+
+        //设置working memory的时间为 pseudo
         configSession.setOption(ClockTypeOption.get("pseudo"));
 
-        // StatefulKnowledgeSession: Once we have our KnowledgeBase we create a Session to use it
         StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession(configSession, null);
 
+        /*可以灵活改动session中的clock*/
         SessionPseudoClock clock = ksession.getSessionClock();
 
         // Each event that is inserted into our WorkingMemory does it through an entry-point

@@ -28,7 +28,6 @@ public class SlidingWindow {
     }
 
     public void run() {
-        // KnowledgeBuilder: Has a collection of DRL files, so our rules set can be divided in several files
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
         URL sliding = App.class.getClassLoader().getResource("sliding.drl");
@@ -39,37 +38,28 @@ public class SlidingWindow {
             System.err.println(kbuilder.getErrors().toString());
         }
 
-        // KnowledgeBaseConfiguration : We'll use this class to set the Event Processing Mode as STREAM
         KnowledgeBaseConfiguration config = KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
         config.setOption(EventProcessingOption.STREAM);
 
 
-        // KnowledgeBase: We create our KnowledgeBase considering the Collection of DRL files the KnowledgeBuider has
         KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase(config);
         kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
 
 
         KnowledgeSessionConfiguration configSession = KnowledgeBaseFactory.newKnowledgeSessionConfiguration();
-        // a clock that is controlled by the application
-        // that is called Pseudo Clock. This clock is specially useful for unit testing temporal rules since it
-        // can be controlled by the application and so the results become deterministic.
         configSession.setOption(ClockTypeOption.get("pseudo"));
 
-        // StatefulKnowledgeSession: Once we have our KnowledgeBase we create a Session to use it
         StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession(configSession, null);
 
         SessionPseudoClock clock = ksession.getSessionClock();
 
-        // Each event that is inserted into our WorkingMemory does it through an entry-point
         WorkingMemoryEntryPoint entryPointSurrey = ksession.getWorkingMemoryEntryPoint("Surrey");
 
         String gang1 = "gang1";
 
-        // workorders events in Surrey
         entryPointSurrey.insert(new Workorder("ABC1", 2, 50, gang1));
         clock.advanceTime(10, TimeUnit.SECONDS);
 
-        // after 100 hours, gang1 takes another workorder. They are very slow
         entryPointSurrey.insert(new Workorder("ABC2", 2, 200, gang1));
         clock.advanceTime(10, TimeUnit.SECONDS);
 
